@@ -28,12 +28,20 @@ export const CommandObservationSchema = z.object({
   output: z.string()
 });
 
+export const RepositoryIdentitySchema = z.object({
+  expected: z.string().min(1).optional(),
+  actual: z.string().min(1).optional(),
+  originUrl: z.string().min(1).optional(),
+  matches: z.boolean().optional()
+});
+
 export const RealityInspectionSchema = z.object({
   schemaVersion: z.literal("1.0.0"),
-  inspectionId: z.string().min(1),
+  inspectionId: z.string().regex(/^INS-[A-F0-9]{24}$/),
   requestId: z.string().regex(/^REQ-[A-Z0-9-]+$/),
   inspectedAt: z.string().datetime(),
   target: z.object({ root: z.string().min(1), exists: z.boolean(), readable: z.boolean(), writable: z.boolean() }),
+  repositoryIdentity: RepositoryIdentitySchema,
   git: z.object({
     isRepository: z.boolean(),
     head: z.string().optional(),
@@ -55,24 +63,31 @@ export const RealityInspectionSchema = z.object({
 export type RealityInspection = z.infer<typeof RealityInspectionSchema>;
 export type InspectionVerdict = (typeof inspectionVerdicts)[number];
 export type CommandObservation = z.infer<typeof CommandObservationSchema>;
+export type InspectionFingerprintPayload = Omit<RealityInspection, "environmentFingerprint" | "inspectionId">;
 
-export function calculateEnvironmentFingerprint(report: Omit<RealityInspection, "environmentFingerprint" | "inspectionId" | "inspectedAt">): string {
-  const payload = {
-    schemaVersion: report.schemaVersion,
-    requestId: report.requestId,
-    target: report.target,
-    git: report.git,
-    tools: report.tools,
-    baseline: report.baseline,
-    sources: report.sources,
-    scope: report.scope,
-    diagnostics: report.diagnostics,
-    verdict: report.verdict
-  };
-  return createHash("sha256").update(JSON.stringify(payload)).digest("hex");
+function canonicalize(value: unknown): unknown {
+  if (Array.isArray(value)) return value.map(canonicalize);
+  if (value && typeof value === "object") {
+    return Object.fromEntries(
+      Object.entries(value as Record<string, unknown>)
+        .filter(([, item]) => item !== undefined)
+        .sort(([left], [right]) => left.localeCompare(right))
+        .map(([key, item]) => [key, canonicalize(item)])
+    );
+  }
+  return value;
+}
+
+export function calculateEnvironmentFingerprint(report: InspectionFingerprintPayload): string {
+  return createHash("sha256").update(JSON.stringify(canonicalize(report)), "utf8").digest("hex");
+}
+
+export function inspectionIdFromFingerprint(fingerprint: string): string {
+  return `INS-${fingerprint.slice(0, 24).toUpperCase()}`;
 }
 
 export function verifyEnvironmentFingerprint(report: RealityInspection): boolean {
-  const { environmentFingerprint: _fingerprint, inspectionId: _inspectionId, inspectedAt: _inspectedAt, ...payload } = report;
-  return calculateEnvironmentFingerprint(payload) === report.environmentFingerprint;
+  const { environmentFingerprint: _fingerprint, inspectionId: _inspectionId, ...payload } = report;
+  const fingerprint = calculateEnvironmentFingerprint(payload);
+  return fingerprint === report.environmentFingerprint && inspectionIdFromFingerprint(fingerprint) === report.inspectionId;
 }
