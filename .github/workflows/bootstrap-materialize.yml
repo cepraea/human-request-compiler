@@ -18,7 +18,7 @@ jobs:
           fetch-depth: 0
       - name: Materialize repository tree
         run: |
-          cat bootstrap/repository.tar.gz.b64.* | base64 --decode | tar -xz
+          cat bootstrap/repository.tar.gz.b64.* | base64 --decode | tar -xz --exclude='.github/workflows/*'
           rm -f bootstrap/repository.tar.gz.b64.* bootstrap/READY
           rmdir bootstrap 2>/dev/null || true
       - name: Commit materialized implementation
