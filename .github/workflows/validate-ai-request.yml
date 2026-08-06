@@ -1,0 +1,49 @@
+name: Validate AI Request
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  issues:
+    types: [opened, edited]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: read
+
+jobs:
+  request-gate:
+    if: github.event_name != 'issues'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install --ignore-scripts
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run validate:requests
+      - run: npm run build
+
+  issue-request-gate:
+    if: github.event_name == 'issues'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install --ignore-scripts
+      - name: Compile canonical request
+        run: npm run validate:issue -- "$GITHUB_EVENT_PATH"
+      - name: Publish report to job summary
+        if: always()
+        run: |
+          if [ -f issue-validation-report.json ]; then
+            echo '## Human Request Compiler' >> "$GITHUB_STEP_SUMMARY"
+            echo '```json' >> "$GITHUB_STEP_SUMMARY"
+            cat issue-validation-report.json >> "$GITHUB_STEP_SUMMARY"
+            echo '```' >> "$GITHUB_STEP_SUMMARY"
+          fi
