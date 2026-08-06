@@ -2,7 +2,13 @@
 
 ## Regra de entrada
 
-Agentes somente podem executar pedidos cujo relatório do compilador declare `READY_FOR_EXECUTION`.
+O compilador semântico somente pode produzir `READY_FOR_FEASIBILITY_CHECK`. Agentes executores somente podem atuar sobre pedidos promovidos para `READY_FOR_EXECUTION` que contenham vínculo `feasibility` válido com um `reality-inspection.json` íntegro e de veredito `READY_FOR_EXECUTION`.
+
+`accessConfirmed: true` é declaração humana, não evidência suficiente de viabilidade.
+
+## Regra de inspeção
+
+A inspeção é read-only e deve comprovar, com evidências identificáveis, a identidade do alvo, acesso, referência Git quando aplicável, ferramentas, fontes locais, caminhos obrigatórios e baseline. Incompatibilidades devem bloquear a promoção.
 
 ## Regra de evidência
 
@@ -14,4 +20,4 @@ A IA pode decidir detalhes técnicos reversíveis dentro do escopo autorizado. A
 
 ## Regra de encerramento
 
-Não declarar sucesso quando houver critério obrigatório sem evidência, regressão, violação de escopo ou estado diferente de `EXECUTED_AND_VALIDATED`.
+Não declarar sucesso quando houver critério obrigatório sem evidência, regressão, violação de escopo, fingerprint inválido ou estado diferente de `EXECUTED_AND_VALIDATED`.

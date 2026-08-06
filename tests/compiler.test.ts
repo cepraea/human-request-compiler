@@ -7,9 +7,9 @@ import { HumanRequestSchema } from "../src/model.js";
 const fixture = (path: string): unknown => JSON.parse(readFileSync(path, "utf8"));
 
 describe("human request compiler", () => {
-  it("libera um pedido completo", () => {
+  it("libera um pedido completo apenas para inspeção da realidade", () => {
     const result = compileRequest(fixture("tests/valid/complete-request.json"));
-    expect(result.state).toBe("READY_FOR_EXECUTION");
+    expect(result.state).toBe("READY_FOR_FEASIBILITY_CHECK");
     expect(result.diagnostics.filter((item) => item.severity === "error")).toHaveLength(0);
   });
 
@@ -19,7 +19,7 @@ describe("human request compiler", () => {
   it("detecta contradição de escopo", () =>
     expect(compileRequest(fixture("tests/contradictory/scope-conflict.json")).state).toBe("CONTRADICTORY"));
 
-  it("separa falta de acesso de insuficiência", () =>
+  it("separa falta de acesso declarado de prontidão semântica", () =>
     expect(compileRequest(fixture("tests/blocked/access-not-confirmed.json")).state).toBe("BLOCKED_BY_ACCESS"));
 
   it.each(["aceitar risco", "alterar regra de negócio"])(
@@ -30,9 +30,7 @@ describe("human request compiler", () => {
       request.authority.reservedActions = request.authority.reservedActions.filter(
         (item) => !item.toLocaleLowerCase("pt-BR").includes(action.toLocaleLowerCase("pt-BR"))
       );
-
       const result = compileRequest(request);
-
       expect(result.state).toBe("NEEDS_HUMAN_DECISION");
       expect(result.diagnostics.map((item) => item.code)).toContain("ALWAYS_RESERVED_ACTION_AUTHORIZED");
       expect(result.diagnostics.map((item) => item.code)).toContain("ALWAYS_RESERVED_ACTION_NOT_RESERVED");

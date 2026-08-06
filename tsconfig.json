@@ -14,6 +14,6 @@
     "outDir": "dist",
     "rootDir": "."
   },
-  "include": ["src/**/*.ts", "evaluation/src/**/*.ts", "tests/**/*.ts"],
+  "include": ["src/**/*.ts", "inspection/src/**/*.ts", "evaluation/src/**/*.ts", "tests/**/*.ts"],
   "exclude": ["node_modules", "dist", "web"]
 }
