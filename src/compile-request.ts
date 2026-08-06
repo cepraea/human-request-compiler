@@ -12,7 +12,14 @@ import { renderFinalRequest } from "./render-final-request.js";
 function decideState(diagnostics: Diagnostic[]): RequestState {
   const errors = diagnostics.filter((item) => item.severity === "error");
   if (errors.some((item) => item.code.includes("CONFLICT") || item.code === "NO_STATE_TRANSITION")) return "CONTRADICTORY";
-  if (errors.some((item) => item.code.includes("HUMAN_DECISION") || item.code === "DESTRUCTIVE_ACTION_NOT_RESERVED")) return "NEEDS_HUMAN_DECISION";
+  if (
+    errors.some(
+      (item) =>
+        item.code.includes("HUMAN_DECISION") ||
+        item.code === "DESTRUCTIVE_ACTION_NOT_RESERVED" ||
+        item.code.startsWith("ALWAYS_RESERVED_ACTION_")
+    )
+  ) return "NEEDS_HUMAN_DECISION";
   if (errors.some((item) => item.code.includes("ACCESS") || item.code === "OBJECT_LOCATION_UNKNOWN")) return "BLOCKED_BY_ACCESS";
   if (errors.length > 0) return "INSUFFICIENT";
   return "READY_FOR_EXECUTION";
