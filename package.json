@@ -1,6 +1,6 @@
 {
   "name": "human-request-compiler",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
   "workspaces": ["web"],
@@ -12,6 +12,8 @@
     "test:watch": "vitest",
     "compile": "tsx src/cli.ts compile",
     "validate": "tsx src/cli.ts validate",
+    "inspect": "tsx src/cli.ts inspect",
+    "promote": "tsx src/cli.ts promote",
     "validate:requests": "tsx src/validate-request-files.ts",
     "validate:issue": "tsx src/validate-github-event.ts",
     "evaluate": "tsx src/cli.ts evaluate",

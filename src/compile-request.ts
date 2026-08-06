@@ -22,7 +22,7 @@ function decideState(diagnostics: Diagnostic[]): RequestState {
   ) return "NEEDS_HUMAN_DECISION";
   if (errors.some((item) => item.code.includes("ACCESS") || item.code === "OBJECT_LOCATION_UNKNOWN")) return "BLOCKED_BY_ACCESS";
   if (errors.length > 0) return "INSUFFICIENT";
-  return "READY_FOR_EXECUTION";
+  return "READY_FOR_FEASIBILITY_CHECK";
 }
 
 export function compileRequest(value: unknown): CompilationResult {
@@ -36,7 +36,8 @@ export function compileRequest(value: unknown): CompilationResult {
     ...detectHumanDecisions(request), ...checkExecutability(request)
   ];
   const state = decideState(diagnostics);
-  const compiled = { ...request, state };
+  const { state: _previousState, feasibility: _previousFeasibility, ...semanticRequest } = request;
+  const compiled: HumanRequest = { ...semanticRequest, state };
   return {
     request: compiled,
     state,

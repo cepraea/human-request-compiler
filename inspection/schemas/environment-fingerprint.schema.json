@@ -1,0 +1,1 @@
+{"$schema":"https://json-schema.org/draft/2020-12/schema","$id":"https://cepraea.github.io/human-request-compiler/inspection/schemas/environment-fingerprint.schema.json","type":"object","additionalProperties":false,"required":["algorithm","value"],"properties":{"algorithm":{"const":"sha256"},"value":{"type":"string","pattern":"^[a-f0-9]{64}$"}}}

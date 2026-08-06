@@ -1,67 +1,81 @@
 # Human Request Compiler
 
-O **Human Request Compiler (HRC)** transforma pedidos humanos em contratos executáveis para agentes de IA. O projeto bloqueia pedidos estruturalmente incompletos, semanticamente contraditórios, sem autoridade definida, sem critérios verificáveis ou sem acesso confirmado.
+O **Human Request Compiler (HRC)** transforma pedidos humanos em contratos verificáveis para agentes de IA e separa formalmente duas fronteiras:
+
+1. **prontidão semântica** — o pedido é completo, consistente, verificável e possui autoridade definida;
+2. **viabilidade real** — o ambiente foi inspecionado e comprovou que a execução é possível.
 
 ## Garantia operacional
 
-O HRC não promete que uma IA nunca falhará. Ele garante uma fronteira verificável:
+O compilador semântico nunca promove diretamente para `READY_FOR_EXECUTION`. Um pedido válido recebe `READY_FOR_FEASIBILITY_CHECK`. A promoção somente ocorre depois de uma inspeção read-only produzir evidências objetivas e um fingerprint íntegro do ambiente.
 
-> Nenhum pedido conhecido como insuficiente, contraditório, bloqueado ou dependente de decisão humana deve ser repassado ao agente executor como `READY_FOR_EXECUTION`.
+```text
+pedido humano
+  → compilação semântica
+  → READY_FOR_FEASIBILITY_CHECK
+  → inspeção da realidade
+  → relatório + fingerprint
+  → promoção vinculada
+  → READY_FOR_EXECUTION
+```
 
-Depois da execução, a camada `evaluation/` verifica critérios de aceitação, evidências, regressões, violações de escopo, declarações falsas de sucesso e eficiência operacional.
+`accessConfirmed: true` continua útil como declaração de entrada, mas não substitui inspeção do alvo.
 
-## Estados
+## Estados de inspeção
 
-- `DRAFT`
-- `INSUFFICIENT`
-- `NEEDS_HUMAN_DECISION`
-- `CONTRADICTORY`
 - `READY_FOR_FEASIBILITY_CHECK`
+- `INSPECTION_IN_PROGRESS`
+- `REQUEST_REALITY_MISMATCH`
 - `BLOCKED_BY_ACCESS`
+- `BLOCKED_BY_TOOLING`
+- `BASELINE_UNSTABLE`
+- `SOURCE_UNAVAILABLE`
 - `READY_FOR_EXECUTION`
-- `EXECUTION_IN_PROGRESS`
-- `EXECUTED_NOT_VALIDATED`
-- `VALIDATION_IN_PROGRESS`
-- `VALIDATION_FAILED`
-- `NEEDS_HUMAN_ACCEPTANCE`
-- `EXECUTED_AND_VALIDATED`
-- `ACCEPTED`
-- `REJECTED`
 
 ## Uso local
 
 ```bash
-npm install
-npm run gate
-npm run compile -- tests/valid/complete-request.json --out artifacts/compiled.json
-npm run validate -- artifacts/compiled.json
-npm run evaluate -- tests/valid/complete-request.json evaluation/fixtures/passed/execution-report.json
+npm ci
+npm run compile -- request.json --out artifacts/compiled.json
+npm run inspect -- artifacts/compiled.json /caminho/do/alvo --out artifacts/reality-inspection.json
+npm run promote -- artifacts/compiled.json artifacts/reality-inspection.json \
+  --report-path artifacts/reality-inspection.json \
+  --out requests/ready/REQ-EXAMPLE.json \
+  --context-out artifacts/execution-context.json
+npm run validate:requests
 ```
 
-## Aplicação web
+A inspeção usa apenas Node.js, Git e comandos explicitamente declarados em `inspectionPlan`. Nenhuma API comercial de IA é necessária.
 
-```bash
-npm run --workspace web dev
-```
+## Plano de inspeção
 
-A aplicação JSON Forms funciona localmente e não chama APIs comerciais de IA. O JSON compilado pode ser copiado para ChatGPT ou Gemini no navegador, ou salvo no repositório para Claude Code e Codex no VS Code.
+O pedido pode declarar:
+
+- `expectedRef`: referência Git que deve corresponder ao `HEAD`;
+- `requiredPaths`: caminhos cuja existência deve ser comprovada;
+- `toolChecks`: comandos objetivos para verificar ferramentas;
+- `baselineCommands`: comandos read-only de build, typecheck, lint ou testes;
+- `maxReportAgeMinutes`: validade máxima do relatório.
+
+Comandos são executados sem shell, reduzindo risco de expansão ou encadeamento acidental.
+
+## Artefatos canônicos
+
+- `inspection/schemas/reality-inspection.schema.json`
+- `inspection/schemas/baseline-result.schema.json`
+- `inspection/schemas/environment-fingerprint.schema.json`
+- `inspection/schemas/execution-context.schema.json`
+- pedido promovido com bloco `feasibility`
 
 ## Gate do GitHub
 
-Pedidos destinados aos agentes devem ser salvos em `requests/ready/*.json`. O workflow `.github/workflows/validate-ai-request.yml` falha quando qualquer arquivo dessa pasta não compila exatamente para `READY_FOR_EXECUTION`.
+Arquivos em `requests/ready/*.json` só passam quando:
 
-O Issue Form recebe um pedido canônico produzido pela CLI ou pela aplicação web. O workflow de Issues valida o JSON e registra o veredito no resumo da execução. Para enforcement completo, configure a proteção da branch `main` exigindo o check `request-gate` antes do merge.
+- o pedido recompila semanticamente para `READY_FOR_FEASIBILITY_CHECK`;
+- declara `READY_FOR_EXECUTION` após promoção;
+- aponta para um relatório de inspeção existente;
+- `requestId`, `inspectionId`, data e fingerprint correspondem;
+- o relatório possui veredito `READY_FOR_EXECUTION`;
+- a idade máxima, quando declarada, não foi excedida.
 
-## Sem API obrigatória
-
-O núcleo usa apenas TypeScript, Zod, JSON Schema, Ajv, JSON Forms, testes locais e GitHub Actions. Integrações com modelos comerciais são opcionais e não fazem parte do gate determinístico.
-
-## Estrutura
-
-- `schemas/`: contratos JSON canônicos.
-- `src/`: parser, compilador, diagnósticos, CLI e gates.
-- `rules/`: regras linguísticas, de autoridade, domínio e destrutividade.
-- `web/`: aplicação JSON Forms.
-- `tests/`: fixtures e testes de estado.
-- `evaluation/`: auditoria posterior do agente.
-- `requests/`: pedidos em elaboração e pedidos liberados.
+Depois da execução, `evaluation/` verifica critérios de aceitação, evidências, regressões, violações de escopo, sucesso falso e eficiência operacional.
