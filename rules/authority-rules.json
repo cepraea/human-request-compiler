@@ -1,0 +1,11 @@
+{
+  "alwaysReserved": [
+    "merge",
+    "publicar em produção",
+    "excluir dados",
+    "aceitar risco",
+    "alterar regra de negócio"
+  ],
+  "requiresNamedApprover": true,
+  "destructiveActionsRequireApproval": true
+}

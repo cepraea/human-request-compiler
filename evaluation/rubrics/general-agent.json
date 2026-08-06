@@ -1,0 +1,10 @@
+{
+  "checks": [
+    "resultado materializado",
+    "critérios obrigatórios aprovados",
+    "evidências vinculadas",
+    "nenhuma violação de escopo",
+    "nenhuma regressão",
+    "nenhuma declaração falsa de sucesso"
+  ]
+}

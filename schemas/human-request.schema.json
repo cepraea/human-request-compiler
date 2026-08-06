@@ -1,0 +1,347 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cepraea.github.io/human-request-compiler/schemas/human-request.schema.json",
+  "title": "Human Request",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "id",
+    "title",
+    "objective",
+    "object",
+    "currentState",
+    "transformation",
+    "expectedState",
+    "sources",
+    "scope",
+    "constraints",
+    "acceptanceCriteria",
+    "authority",
+    "delivery",
+    "completion",
+    "executability",
+    "pendingHumanDecisions"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "1.0.0"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^REQ-[A-Z0-9-]+$"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 8
+    },
+    "objective": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "outcome",
+        "purpose",
+        "priority"
+      ],
+      "properties": {
+        "outcome": {
+          "type": "string",
+          "minLength": 10
+        },
+        "purpose": {
+          "type": "string",
+          "minLength": 10
+        },
+        "priority": {
+          "type": "string",
+          "minLength": 3
+        }
+      }
+    },
+    "object": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "type",
+        "name",
+        "location"
+      ],
+      "properties": {
+        "type": {
+          "type": "string",
+          "minLength": 2
+        },
+        "name": {
+          "type": "string",
+          "minLength": 2
+        },
+        "location": {
+          "type": "string",
+          "minLength": 2
+        }
+      }
+    },
+    "currentState": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "problem",
+        "evidence"
+      ],
+      "properties": {
+        "problem": {
+          "type": "string",
+          "minLength": 10
+        },
+        "evidence": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 3
+          }
+        }
+      }
+    },
+    "transformation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "action",
+        "from",
+        "to"
+      ],
+      "properties": {
+        "action": {
+          "type": "string",
+          "minLength": 3
+        },
+        "from": {
+          "type": "string",
+          "minLength": 3
+        },
+        "to": {
+          "type": "string",
+          "minLength": 3
+        }
+      }
+    },
+    "expectedState": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "artifact",
+        "behaviors",
+        "mustNotHappen"
+      ],
+      "properties": {
+        "artifact": {
+          "type": "string",
+          "minLength": 3
+        },
+        "behaviors": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 5
+          }
+        },
+        "mustNotHappen": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 5
+          }
+        }
+      }
+    },
+    "sources": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "canonical",
+        "allowed",
+        "forbidden",
+        "conflictRule"
+      ],
+      "properties": {
+        "canonical": {
+          "type": "string",
+          "minLength": 3
+        },
+        "allowed": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 2
+          },
+          "uniqueItems": true
+        },
+        "forbidden": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 2
+          },
+          "uniqueItems": true
+        },
+        "conflictRule": {
+          "type": "string",
+          "minLength": 10
+        }
+      }
+    },
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "include",
+        "exclude"
+      ],
+      "properties": {
+        "include": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 2
+          },
+          "uniqueItems": true
+        },
+        "exclude": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 2
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "constraints": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 5
+      }
+    },
+    "acceptanceCriteria": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "acceptance-criterion.schema.json"
+      }
+    },
+    "authority": {
+      "$ref": "authority.schema.json"
+    },
+    "delivery": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "format",
+        "location",
+        "evidenceRequired"
+      ],
+      "properties": {
+        "format": {
+          "type": "string",
+          "minLength": 2
+        },
+        "location": {
+          "type": "string",
+          "minLength": 2
+        },
+        "evidenceRequired": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 2
+          }
+        }
+      }
+    },
+    "completion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "doneWhen",
+        "failureWhen"
+      ],
+      "properties": {
+        "doneWhen": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 5
+          }
+        },
+        "failureWhen": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 5
+          }
+        }
+      }
+    },
+    "executability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "environment",
+        "requiredTools",
+        "accessConfirmed"
+      ],
+      "properties": {
+        "environment": {
+          "type": "string",
+          "minLength": 2
+        },
+        "requiredTools": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 2
+          },
+          "uniqueItems": true
+        },
+        "accessConfirmed": {
+          "type": "boolean"
+        }
+      }
+    },
+    "pendingHumanDecisions": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 3
+      }
+    },
+    "state": {
+      "enum": [
+        "DRAFT",
+        "INSUFFICIENT",
+        "NEEDS_HUMAN_DECISION",
+        "CONTRADICTORY",
+        "READY_FOR_FEASIBILITY_CHECK",
+        "BLOCKED_BY_ACCESS",
+        "READY_FOR_EXECUTION",
+        "EXECUTION_IN_PROGRESS",
+        "EXECUTED_NOT_VALIDATED",
+        "VALIDATION_IN_PROGRESS",
+        "VALIDATION_FAILED",
+        "NEEDS_HUMAN_ACCEPTANCE",
+        "EXECUTED_AND_VALIDATED",
+        "ACCEPTED",
+        "REJECTED"
+      ]
+    }
+  }
+}

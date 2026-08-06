@@ -1,0 +1,15 @@
+{
+  "general": {
+    "requireCanonicalSource": true,
+    "requireMandatoryAcceptanceCriterion": true,
+    "requireEvidenceForEveryMandatoryCriterion": true,
+    "requireAccessConfirmation": true
+  },
+  "software": {
+    "requiredEvidenceTypes": [
+      "test-result",
+      "diff"
+    ],
+    "forbidSuccessFromCompilationOnly": true
+  }
+}

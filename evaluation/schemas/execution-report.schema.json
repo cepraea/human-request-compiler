@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cepraea.github.io/human-request-compiler/evaluation/schemas/execution-report.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "requestId",
+    "agent",
+    "executionId",
+    "validationResults",
+    "metrics",
+    "requiresHumanAcceptance"
+  ],
+  "properties": {
+    "requestId": {
+      "type": "string"
+    },
+    "agent": {
+      "type": "string"
+    },
+    "executionId": {
+      "type": "string"
+    },
+    "validationResults": {
+      "type": "array",
+      "items": {
+        "$ref": "validation-result.schema.json"
+      }
+    },
+    "metrics": {
+      "$ref": "performance-metrics.schema.json"
+    },
+    "changedPaths": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "requiresHumanAcceptance": {
+      "type": "boolean"
+    },
+    "agentDeclaredSuccess": {
+      "type": "boolean"
+    }
+  }
+}

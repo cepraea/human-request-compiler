@@ -1,0 +1,15 @@
+description: Avaliação determinística de respostas já produzidas
+prompts:
+  - "{{response}}"
+providers:
+  - echo
+
+tests:
+  - vars:
+      response: '{"status":"READY_FOR_EXECUTION"}'
+    assert:
+      - type: is-json
+      - type: contains
+        value: READY_FOR_EXECUTION
+      - type: not-contains
+        value: NOT_EVALUATED

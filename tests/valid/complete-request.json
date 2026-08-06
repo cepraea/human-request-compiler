@@ -1,0 +1,139 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "REQ-HRC-001",
+  "title": "Validar pedidos antes da execução por agentes",
+  "objective": {
+    "outcome": "Bloquear pedidos insuficientes antes de qualquer execução automatizada.",
+    "purpose": "Reduzir retrabalho humano e impedir que agentes iniciem tarefas sem critérios verificáveis.",
+    "priority": "correção antes de otimização"
+  },
+  "object": {
+    "type": "repositório GitHub",
+    "name": "human-request-compiler",
+    "location": "https://github.com/cepraea/human-request-compiler"
+  },
+  "currentState": {
+    "problem": "Pedidos livres podem chegar aos agentes sem estrutura, autoridade ou critérios objetivos.",
+    "evidence": [
+      "Histórico de ciclos com bloqueios sucessivos e retrabalho manual."
+    ]
+  },
+  "transformation": {
+    "action": "implementar compilação determinística de pedidos",
+    "from": "pedido livre sem estado verificável",
+    "to": "pedido canônico com estado calculado"
+  },
+  "expectedState": {
+    "artifact": "compilador TypeScript executável",
+    "behaviors": [
+      "Calcular o estado do pedido.",
+      "Bloquear qualquer estado diferente de READY_FOR_EXECUTION."
+    ],
+    "mustNotHappen": [
+      "Repassar pedido insuficiente ao agente.",
+      "Usar API comercial obrigatória."
+    ]
+  },
+  "sources": {
+    "canonical": "schemas/human-request.schema.json",
+    "allowed": [
+      "schemas/human-request.schema.json",
+      "rules/domain-rules.json",
+      "instrução atual do usuário"
+    ],
+    "forbidden": [
+      "inferências de regras de negócio não declaradas"
+    ],
+    "conflictRule": "A instrução atual do usuário prevalece; em seguida, o schema canônico prevalece sobre projeções derivadas."
+  },
+  "scope": {
+    "include": [
+      "schemas",
+      "src",
+      "rules",
+      "tests",
+      "web",
+      "evaluation",
+      ".github"
+    ],
+    "exclude": [
+      "configuração de cobrança",
+      "merge na branch main"
+    ]
+  },
+  "constraints": [
+    "Não depender de API comercial de modelos.",
+    "Preservar aprovação humana para merge e publicação."
+  ],
+  "acceptanceCriteria": [
+    {
+      "id": "AC-HRC-001",
+      "description": "O pedido válido deve compilar para READY_FOR_EXECUTION.",
+      "condition": "Dado o fixture completo e sem conflitos",
+      "expected": "O estado calculado deve ser READY_FOR_EXECUTION.",
+      "verification": "Executar o teste automatizado do compilador.",
+      "mandatory": true,
+      "environment": "Node.js 22",
+      "evidenceTypes": [
+        "test-result"
+      ]
+    },
+    {
+      "id": "AC-HRC-002",
+      "description": "Pedidos insuficientes devem ser bloqueados antes da execução.",
+      "condition": "Dado um pedido sem critério obrigatório",
+      "expected": "O estado calculado não deve ser READY_FOR_EXECUTION.",
+      "verification": "Executar os fixtures negativos e verificar o estado.",
+      "mandatory": true,
+      "environment": "Node.js 22",
+      "evidenceTypes": [
+        "test-result"
+      ]
+    }
+  ],
+  "authority": {
+    "executor": "agente de implementação",
+    "approver": "Davi Sermenho",
+    "authorizedActions": [
+      "criar arquivos",
+      "editar código",
+      "executar testes",
+      "abrir pull request"
+    ],
+    "reservedActions": [
+      "merge",
+      "publicar em produção",
+      "excluir dados",
+      "alterar regra de negócio"
+    ],
+    "destructiveActionsRequireApproval": true
+  },
+  "delivery": {
+    "format": "pull request",
+    "location": "cepraea/human-request-compiler",
+    "evidenceRequired": [
+      "resultado dos testes",
+      "diff do pull request"
+    ]
+  },
+  "completion": {
+    "doneWhen": [
+      "Todos os critérios obrigatórios estiverem PASS com evidência.",
+      "O gate local e o GitHub Actions estiverem configurados."
+    ],
+    "failureWhen": [
+      "Qualquer critério obrigatório falhar.",
+      "O projeto depender de API comercial obrigatória."
+    ]
+  },
+  "executability": {
+    "environment": "Node.js 22 e GitHub Actions",
+    "requiredTools": [
+      "npm",
+      "TypeScript",
+      "GitHub"
+    ],
+    "accessConfirmed": true
+  },
+  "pendingHumanDecisions": []
+}

@@ -1,0 +1,36 @@
+{
+  "questions": [
+    {
+      "id": "HA-01",
+      "question": "O resultado resolve o problema real?",
+      "answers": [
+        "SIM",
+        "NÃO"
+      ]
+    },
+    {
+      "id": "HA-02",
+      "question": "A regra de negócio foi preservada?",
+      "answers": [
+        "SIM",
+        "NÃO"
+      ]
+    },
+    {
+      "id": "HA-03",
+      "question": "Existe efeito colateral inaceitável?",
+      "answers": [
+        "SIM",
+        "NÃO"
+      ]
+    },
+    {
+      "id": "HA-04",
+      "question": "O resultado pode ser homologado?",
+      "answers": [
+        "SIM",
+        "NÃO"
+      ]
+    }
+  ]
+}
