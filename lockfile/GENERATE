@@ -1,0 +1,3 @@
+refresh_package_lock=true
+audit_all_dependencies=true
+security_patch_vite_vitest=true
