@@ -1,0 +1,33 @@
+{
+  "name": "human-request-compiler",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "workspaces": ["web"],
+  "scripts": {
+    "build": "tsc -p tsconfig.json && npm run build:web",
+    "build:web": "npm --workspace web run build",
+    "typecheck": "tsc -p tsconfig.json --noEmit && npm --workspace web run typecheck",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "compile": "tsx src/cli.ts compile",
+    "validate": "tsx src/cli.ts validate",
+    "validate:requests": "tsx src/validate-request-files.ts",
+    "validate:issue": "tsx src/validate-github-event.ts",
+    "evaluate": "tsx src/cli.ts evaluate",
+    "gate": "npm run typecheck && npm test && npm run validate:requests && npm run build"
+  },
+  "dependencies": {
+    "ajv": "8.20.0",
+    "ajv-formats": "3.0.1",
+    "yaml": "2.9.0",
+    "zod": "4.0.17"
+  },
+  "devDependencies": {
+    "@types/node": "24.2.0",
+    "tsx": "4.20.3",
+    "typescript": "5.9.2",
+    "vitest": "3.2.7"
+  },
+  "engines": {"node": ">=22"}
+}

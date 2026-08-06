@@ -1,0 +1,37 @@
+[
+  {
+    "term": "melhorar",
+    "severity": "error",
+    "suggestion": "Declare a propriedade observável que deve mudar e o valor esperado."
+  },
+  {
+    "term": "adequado",
+    "severity": "warning",
+    "suggestion": "Defina o padrão ou critério que torna o resultado adequado."
+  },
+  {
+    "term": "corretamente",
+    "severity": "warning",
+    "suggestion": "Associe a palavra a critérios verificáveis."
+  },
+  {
+    "term": "suficiente",
+    "severity": "warning",
+    "suggestion": "Declare quantidade, limiar ou condição objetiva."
+  },
+  {
+    "term": "quando necessário",
+    "severity": "error",
+    "suggestion": "Defina a condição exata de aplicação."
+  },
+  {
+    "term": "etc",
+    "severity": "error",
+    "suggestion": "Enumere integralmente os elementos relevantes."
+  },
+  {
+    "term": "da melhor forma",
+    "severity": "error",
+    "suggestion": "Defina prioridade e critérios de otimização."
+  }
+]

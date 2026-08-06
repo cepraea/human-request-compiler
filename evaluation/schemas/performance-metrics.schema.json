@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cepraea.github.io/human-request-compiler/evaluation/schemas/performance-metrics.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "attempts",
+    "humanInterventions",
+    "unjustifiedHumanInterventions",
+    "scopeViolations",
+    "regressions",
+    "falseSuccessDeclarations"
+  ],
+  "properties": {
+    "attempts": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "humanInterventions": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "unjustifiedHumanInterventions": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "scopeViolations": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "regressions": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "falseSuccessDeclarations": {
+      "type": "integer",
+      "minimum": 0
+    }
+  }
+}

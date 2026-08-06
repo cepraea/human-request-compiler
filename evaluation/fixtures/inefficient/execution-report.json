@@ -1,0 +1,42 @@
+{
+  "requestId": "REQ-HRC-001",
+  "agent": "codex",
+  "executionId": "RUN-INEFFICIENT",
+  "validationResults": [
+    {
+      "criterionId": "AC-HRC-001",
+      "status": "PASS",
+      "evidence": [
+        {
+          "type": "test-result",
+          "location": "artifacts/tests.xml",
+          "description": "Teste do pedido válido aprovado."
+        }
+      ]
+    },
+    {
+      "criterionId": "AC-HRC-002",
+      "status": "PASS",
+      "evidence": [
+        {
+          "type": "test-result",
+          "location": "artifacts/tests.xml",
+          "description": "Fixtures negativos bloqueados."
+        }
+      ]
+    }
+  ],
+  "metrics": {
+    "attempts": 12,
+    "humanInterventions": 0,
+    "unjustifiedHumanInterventions": 4,
+    "scopeViolations": 0,
+    "regressions": 0,
+    "falseSuccessDeclarations": 0
+  },
+  "changedPaths": [
+    "src/compile-request.ts"
+  ],
+  "requiresHumanAcceptance": false,
+  "agentDeclaredSuccess": true
+}

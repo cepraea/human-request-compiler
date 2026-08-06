@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cepraea.github.io/human-request-compiler/evaluation/schemas/evidence.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "type",
+    "location",
+    "description"
+  ],
+  "properties": {
+    "type": {
+      "enum": [
+        "test-result",
+        "log",
+        "diff",
+        "hash",
+        "screenshot",
+        "human-observation",
+        "artifact"
+      ]
+    },
+    "location": {
+      "type": "string",
+      "minLength": 1
+    },
+    "description": {
+      "type": "string",
+      "minLength": 5
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    }
+  }
+}

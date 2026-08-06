@@ -1,0 +1,36 @@
+{
+  "requestId": "REQ-HRC-001",
+  "agent": "codex",
+  "executionId": "RUN-FALSE-SUCCESS",
+  "validationResults": [
+    {
+      "criterionId": "AC-HRC-001",
+      "status": "PASS",
+      "evidence": [
+        {
+          "type": "test-result",
+          "location": "artifacts/tests.xml",
+          "description": "Teste do pedido válido aprovado."
+        }
+      ]
+    },
+    {
+      "criterionId": "AC-HRC-002",
+      "status": "NOT_EVALUATED",
+      "evidence": []
+    }
+  ],
+  "metrics": {
+    "attempts": 1,
+    "humanInterventions": 0,
+    "unjustifiedHumanInterventions": 0,
+    "scopeViolations": 0,
+    "regressions": 0,
+    "falseSuccessDeclarations": 1
+  },
+  "changedPaths": [
+    "src/compile-request.ts"
+  ],
+  "requiresHumanAcceptance": false,
+  "agentDeclaredSuccess": true
+}

@@ -1,0 +1,2 @@
+import type { EvaluationResult } from "./types.js";
+export function renderEvaluationReport(result: EvaluationResult): string { return `# Relatório de avaliação\n\n- Estado: ${result.status}\n- Critérios aprovados: ${(result.acceptancePassRate * 100).toFixed(0)}%\n- Cobertura de evidências: ${(result.evidenceCoverage * 100).toFixed(0)}%\n- Eficiência: ${result.efficiencyScore}/100 (${result.efficiencyClass})\n\n## Diagnósticos\n${result.diagnostics.map((item) => `- ${item}`).join("\n") || "- Nenhum"}\n`; }

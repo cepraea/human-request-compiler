@@ -1,0 +1,27 @@
+name: Pedido para agente de IA
+description: Submeta somente um pedido compilado pela CLI ou aplicação web.
+title: "[AI-REQUEST] "
+labels: ["ai-request"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        O pedido somente pode ser repassado a agentes quando o workflow calcular `READY_FOR_EXECUTION`.
+  - type: textarea
+    id: canonical_request
+    attributes:
+      label: Pedido canônico (JSON)
+      description: Cole o JSON integral gerado pelo Human Request Compiler.
+      render: json
+      placeholder: '{"schemaVersion":"1.0.0", ...}'
+    validations:
+      required: true
+  - type: checkboxes
+    id: authority
+    attributes:
+      label: Confirmações humanas
+      options:
+        - label: As regras de negócio, limites e decisões reservadas foram declarados.
+          required: true
+        - label: O pedido não autoriza merge, publicação ou exclusão sem aprovação humana explícita.
+          required: true

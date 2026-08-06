@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cepraea.github.io/human-request-compiler/schemas/acceptance-criterion.schema.json",
+  "title": "Acceptance Criterion",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "description",
+    "condition",
+    "expected",
+    "verification",
+    "mandatory"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^AC-[A-Z0-9-]+$"
+    },
+    "description": {
+      "type": "string",
+      "minLength": 10
+    },
+    "condition": {
+      "type": "string",
+      "minLength": 5
+    },
+    "expected": {
+      "type": "string",
+      "minLength": 5
+    },
+    "verification": {
+      "type": "string",
+      "minLength": 5
+    },
+    "mandatory": {
+      "type": "boolean"
+    },
+    "environment": {
+      "type": "string",
+      "minLength": 2
+    },
+    "evidenceTypes": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 2
+      },
+      "uniqueItems": true
+    }
+  }
+}

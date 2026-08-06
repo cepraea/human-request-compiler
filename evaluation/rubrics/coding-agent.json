@@ -1,0 +1,14 @@
+{
+  "absoluteGates": {
+    "acceptancePassRate": 1,
+    "evidenceCoverage": 1,
+    "scopeViolations": 0,
+    "regressions": 0,
+    "falseSuccessDeclarations": 0
+  },
+  "efficiency": {
+    "excellent": 90,
+    "acceptable": 75,
+    "inefficient": 50
+  }
+}
