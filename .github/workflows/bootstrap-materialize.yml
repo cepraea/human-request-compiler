@@ -3,7 +3,7 @@ name: Bootstrap Human Request Compiler
 on:
   push:
     branches: [agent/bootstrap-human-request-compiler]
-    paths: [bootstrap/repository.tar.gz.b64]
+    paths: [bootstrap/repository.tar.gz.b64.*]
 
 permissions:
   contents: write
@@ -18,8 +18,8 @@ jobs:
           fetch-depth: 0
       - name: Materialize repository tree
         run: |
-          base64 --decode bootstrap/repository.tar.gz.b64 | tar -xz
-          rm -f bootstrap/repository.tar.gz.b64
+          cat bootstrap/repository.tar.gz.b64.* | base64 --decode | tar -xz
+          rm -f bootstrap/repository.tar.gz.b64.*
           rmdir bootstrap 2>/dev/null || true
       - name: Commit materialized implementation
         run: |
