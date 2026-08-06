@@ -2,6 +2,7 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname } from "node:path";
 import { parseRequestFile } from "./parse-request.js";
 import { compileRequest } from "./compile-request.js";
+import { extractHumanRequest } from "./extract-human-request.js";
 import { evaluateExecution } from "../evaluation/src/evaluate-execution.js";
 import { inspectReality } from "../inspection/src/inspect-reality.js";
 import { promoteRequest } from "../inspection/src/promote-request.js";
@@ -32,9 +33,8 @@ if (command === "compile" || command === "validate") {
 } else if (command === "inspect") {
   const [input, targetRoot] = args;
   if (!input || !targetRoot) throw new Error("Use: inspect <pedido-compilado.json> <diretório-alvo>.");
-  const compiled = compileRequest(await parseRequestFile(input));
-  if (compiled.state !== "READY_FOR_FEASIBILITY_CHECK" || !compiled.request) throw new Error(`Pedido não está pronto para inspeção: ${compiled.state}.`);
-  const report = await inspectReality(compiled.request, targetRoot);
+  const request = extractHumanRequest(JSON.parse(await readFile(input, "utf8")) as unknown);
+  const report = await inspectReality(request, targetRoot);
   const output = JSON.stringify(report, null, 2);
   if (outputPath) await save(outputPath, output); else console.log(output);
   if (report.verdict !== "READY_FOR_EXECUTION") process.exitCode = 1;
