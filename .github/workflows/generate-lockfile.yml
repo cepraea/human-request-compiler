@@ -21,6 +21,8 @@ jobs:
           node-version: 22
       - name: Generate reproducible dependency lock
         run: npm install --package-lock-only --ignore-scripts
+      - name: Report complete dependency audit
+        run: npm audit || true
       - name: Report production dependency audit
         run: npm audit --omit=dev || true
       - name: Commit lockfile
@@ -30,5 +32,5 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add package-lock.json lockfile/GENERATE
-          git commit -m "build: add npm dependency lockfile"
+          git commit -m "build: refresh npm dependency lockfile"
           git push origin HEAD:agent/bootstrap-human-request-compiler
